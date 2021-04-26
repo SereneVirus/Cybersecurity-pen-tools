@@ -1,8 +1,9 @@
-#Nmap
+##Nmap
 Nmap ("Network Mapper") is a free and open source (license) utility for network discovery and security auditing.
 
 ## Scan Types Overview
 > TCP
+
 Most common:
 - TCP Connect (-sT) - Default if run as regular user
 - SYN "Half-open" (-sS) - Default if run as sudo or root
@@ -21,10 +22,11 @@ Half-open saves resources and time since it doesn't have a need to terminate the
 Drawback of Half-open is that the unsyncronized nature of the scan can bring down badly configured services
 
 > Less common
-NULL, FIN and Xmas tries to be even more sneaky than Half-open
-NULL does not include any flag and expects the exchange to be (empty) -> RST
-FIN sends the FIN flag (used to end an established TCP connection). Since no connection is established the expected exchange is FIN -> RST
-Xmas sends a malformed packet with the URG (Urgent), PSH (Push) and FIN flags enabled. Analyzing the packet in Wireshark makes it look like a Christmas tree.
+
+NULL, FIN and Xmas tries to be even more sneaky than Half-open<br/>
+NULL does not include any flag and expects the exchange to be (empty) -> RST<br/>
+FIN sends the FIN flag (used to end an established TCP connection). Since no connection is established the expected exchange is FIN -> RST<br/>
+Xmas sends a malformed packet with the URG (Urgent), PSH (Push) and FIN flags enabled. Analyzing the packet in Wireshark makes it look like a Christmas tree</br>
 ![Christmas tree](https://www.plixer.com/wp-content/uploads/2015/12/xmaswireshark.jpg)
 
 > UDP
@@ -34,19 +36,19 @@ UDP, being stateless, expects no response. Nmap marks a scan on a port with no r
 Filtered means a firewall is dropping the packet instead of replying with an SYN-ACK or RST. A dropped packet for a specific port can indicate something of value there
 The firewall could also be set up to drop every packet destined to ports not in use. This would make it less conspicuous
 
-It is also possible to spoof the firewall (in iptables for example) to send a RST instead of dropping the unwanted packet
+It is also possible to spoof the firewall (in iptables for example) to send a RST instead of dropping the unwanted packet<br/>
 `iptables -I INPUT -p tcp --dport <port> -j REJECT --reject-with tcp-reset`
 This makes it virtually impossible for an attacker to discern what ports are of value
 
 Every port in an UDP scan that does not receive a reply will send a second attempt to make sure the attempt didn't just get lost the first time around
 A UDP packet sent to a closed UDP port will usually receive an ICMP (PING) response saying the port is unreachable
 
-UDP is recommended to only run against high priority ports, due to how slow and inaccurate the scan is compared to TCP
+UDP is recommended to only run against high priority ports, due to how slow and inaccurate the scan is compared to TCP<br/>
 `nmap -sU --top-ports 50 <target>` will only UDP scan the 50 most commonly open ports
 
 ## ICMP Network Scanning
 
-Nmap is primarily used to scan ports with TCP or UDP, but it is possible to perform Ping sweeps as well with the `-sn` flag
+Nmap is primarily used to scan ports with TCP or UDP, but it is possible to perform Ping sweeps as well with the `-sn` flag<br/>
 `nmap -sn 192.168.0.1-254` or CIDR `nmap -sn 192.168.0.1/24` can both be used
 
 All packets will be ICMP outside of local network and regular users will use ICMP inside of local network

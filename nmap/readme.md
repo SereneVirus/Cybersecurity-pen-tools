@@ -16,12 +16,10 @@ Less common:
 TCP Connect does the regular three-way handshake SYN -> SYN-ACK -> ACK
 Half-open does SYN -> SYN-ACK -> RST (Reset)
 
-Half-open can sometimes bypass security audits due to certain systems only logging a completed three-way handshake
+Half-open can sometimes bypass security audits due to certain systems only logging a completed three-way handshake<br/>
 Half-open saves resources and time since it doesn't have a need to terminate the connection that a regular TCP connection would establish
 
 Drawback of Half-open is that the unsyncronized nature of the scan can bring down badly configured services
-
-> Less common
 
 NULL, FIN and Xmas tries to be even more sneaky than Half-open<br/>
 NULL does not include any flag and expects the exchange to be (empty) -> RST<br/>
@@ -32,15 +30,15 @@ Xmas sends a malformed packet with the URG (Urgent), PSH (Push) and FIN flags en
 > UDP
 - UDP (-sU)
 
-UDP, being stateless, expects no response. Nmap marks a scan on a port with no response as `open` or `filtered`
-Filtered means a firewall is dropping the packet instead of replying with an SYN-ACK or RST. A dropped packet for a specific port can indicate something of value there
+UDP, being stateless, expects no response. Nmap marks a scan on a port with no response as `open` or `filtered`<br/>
+Filtered means a firewall is dropping the packet instead of replying with an SYN-ACK or RST. A dropped packet for a specific port can indicate something of value there<br/>
 The firewall could also be set up to drop every packet destined to ports not in use. This would make it less conspicuous
 
 It is also possible to spoof the firewall (in iptables for example) to send a RST instead of dropping the unwanted packet<br/>
-`iptables -I INPUT -p tcp --dport <port> -j REJECT --reject-with tcp-reset`
+`iptables -I INPUT -p tcp --dport <port> -j REJECT --reject-with tcp-reset`<br/>
 This makes it virtually impossible for an attacker to discern what ports are of value
 
-Every port in an UDP scan that does not receive a reply will send a second attempt to make sure the attempt didn't just get lost the first time around
+Every port in an UDP scan that does not receive a reply will send a second attempt to make sure the attempt didn't just get lost the first time around<br/>
 A UDP packet sent to a closed UDP port will usually receive an ICMP (PING) response saying the port is unreachable
 
 UDP is recommended to only run against high priority ports, due to how slow and inaccurate the scan is compared to TCP<br/>
